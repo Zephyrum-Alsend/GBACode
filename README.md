@@ -1,5 +1,2 @@
-# GBAExercises
-Code for a GBA game and code from tutorial exercises on GBA development.
-
-Tutorial w/ Exercises: http://kylehalladay.com/gba.html
-Primary tutorial: https://www.coranac.com/tonc/text/toc.htm
+# GBACode
+Code for GBA programs, divided into folders for various tutorials and the main project.
