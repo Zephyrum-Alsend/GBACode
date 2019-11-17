@@ -16,7 +16,7 @@ int main()
 
 	for (int i = 0; i < SCREEN_W * SCREEN_H; ++i)
 	{
-		SCREENBUFFER[i] = 0x001F;
+		SCREENBUFFER[i] = 0x0000;
 	}
 
     while(1){}
