@@ -6,6 +6,7 @@
 
 inline void vsync()
 {
+  // The GBA's screen is 240x160 pixels and draws left to right, starting at the top left pixel.
   while (REG_VCOUNT >= 160);
   while (REG_VCOUNT < 160);
 }
