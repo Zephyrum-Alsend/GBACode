@@ -1,0 +1,17 @@
+// Functioning for converting RGB values into GBA useable value for color.
+
+typedef unsigned char       uint8;
+typedef unsigned short      uint16;
+
+// For debugging.
+inline uint16 MakeCol(uint8 red, uint8 green, uint8 blue)
+{
+    // "& 0x1F" clamps value to acceptable range.
+    return (red & 0x1F) | (green & 0x1F) << 5 | (blue & 0x1F) << 10;
+}
+
+// For runtime.
+inline uint16 MakeCol(uint8 red, uint8 green, uint8 blue)
+{
+    return red | green << 5 | blue << 10;
+}
