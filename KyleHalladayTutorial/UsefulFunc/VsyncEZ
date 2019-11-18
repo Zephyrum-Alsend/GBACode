@@ -1,0 +1,11 @@
+// Vsync the easy way. Not the proper way.
+// The GBA draws to the screen constantly, whether we tell it to or not. Vsync is important to prevent tearing artifacts,
+// so we only update the screenbuffer during a Vblank (the pause after the GBA finishes drawing 1 frame).
+
+#define REG_VCOUNT      (* (volatile uint16*) 0x04000006)
+
+inline void vsync()
+{
+  while (REG_VCOUNT >= 160);
+  while (REG_VCOUNT < 160);
+}
