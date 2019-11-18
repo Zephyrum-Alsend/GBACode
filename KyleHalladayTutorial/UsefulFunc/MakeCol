@@ -1,4 +1,4 @@
-// Functioning for converting RGB values into GBA useable value for color.
+// Function for converting RGB values into GBA useable value for color.
 
 typedef unsigned char       uint8;
 typedef unsigned short      uint16;
