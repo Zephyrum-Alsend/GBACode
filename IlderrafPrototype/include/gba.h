@@ -6,9 +6,7 @@
 //  By Kyle Halladay, expanded by Lucas Crockett
 //  12/12/2019
 /////////////////////////////////////////////////////////////////////////////
-
-#ifndef GBA_H
-#define GBA_H
+#pragma once
 
 //TYPES
 typedef unsigned char      uint8;
@@ -38,6 +36,18 @@ typedef struct AffineMatrix
     uint16 fill3[3];
     sint16 pd;
 } __attribute__((packed, aligned(4))) AffineMatrix;;
+
+typedef struct
+{
+    ObjectAttributes* spriteAttribs;
+    int facingRight;
+    int firstAnimCycleFrame;
+    int animFrame;
+    int posX;
+    int posY;
+    int velX;
+    int velY;
+}CharSprite;
 
 //DEFINES
 #define SCREEN_W    	240
@@ -93,6 +103,3 @@ inline uint16 RGB15(uint32 red, uint32 green, uint32 blue)
 {
     return red | (green<<5) | (blue<<10);
 }
-
-
-#endif

@@ -5,12 +5,7 @@
 //  By Kyle Halladay
 //  12/12/2019
 ////////////////////////////////////////////////////////////////////////
-
-#ifndef INPUT_H
-#define INPUT_H
-
-unsigned short input_cur = 0x03FF;
-unsigned short input_prev = 0x03FF;
+#pragma once
 
 #define REG_KEYINPUT  (* (volatile unsigned short*) 0x4000130)
 
@@ -26,27 +21,21 @@ unsigned short input_prev = 0x03FF;
 #define KEY_L        0x0200
 
 #define KEY_MASK     0xFC00
+class input
 
-// Polling function
-inline void key_poll()
 {
-    input_prev = input_cur;
-    input_cur = REG_KEYINPUT | KEY_MASK;
-}
+public:
+    input() {};
+    // Polling function
+    void key_poll();
 
-unsigned short wasKeyPressed(unsigned short key_code)
-{
-    return (key_code) & (~input_cur & input_prev);
-}
+    unsigned short wasKeyPressed(unsigned short key_code);
 
-unsigned short wasKeyReleased(unsigned short key_code)
-{
-    return  (key_code) & (input_cur & ~input_prev);
-}
+    unsigned short wasKeyReleased(unsigned short key_code);
 
-unsigned short getKeyState(unsigned short key_code)
-{
-    return !(key_code & (input_cur) );
-}
+    unsigned short getKeyState(unsigned short key_code);
 
-#endif
+private:
+    unsigned short input_cur = 0x03FF;
+    unsigned short input_prev = 0x03FF;
+};
