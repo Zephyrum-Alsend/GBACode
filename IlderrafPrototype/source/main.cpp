@@ -1,38 +1,33 @@
 #include "gba.h"
-#include <string.h>
 #include "TileTest.h"
 #include "controls.h"
-using namespace std;
+#include "input.h"
+#include "lonk.h"
+
+
 
 int main()
 {
-	TileTest();
-    // REG_DISPLAYCONTROL = VIDEOMODE_3 | BACKGROUND_2;
+    // Function for testing input, does not exit
+	//TileTest();
 
-	// for (int i = 0; i < SCREEN_W * SCREEN_H; ++i)
-	// {
-	// 	SCREENBUFFER[i] = 0x0000;
-	// }
+    Controls inpu;
 
-	// Controls c;
-	// c.UpdateActions();
-	// uint8 actions[10];
-    // while(1)
-	// {
-	// 	vsync();
-	// 	c.UpdateActions();
-	// 	c.GetActions(actions);
+	REG_DISPLAYCONTROL =  VIDEOMODE_0 | BACKGROUND_0 | ENABLE_OBJECTS | MAPPINGMODE_1D;
+	uint8 action_map[10];
 
-	// 	for (int i = 0; i < 10; ++i)
-	// 	{
-	// 		if(actions[i])
-	// 		{
-	// 			for (int j = 0; j < SCREEN_W * SCREEN_H; ++j)
-	// 			{
-	// 				SCREENBUFFER[j] = 0x0000 + i*100;
-	// 			}
-	// 		}
-	// 	}
-	// }
-    // return 0;
+	Lonk hero(true);
+
+	while(1)
+	{
+		vsync();
+		
+		inpu.UpdateActions();
+		inpu.GetActions(action_map);
+
+		hero.ExecuteAction(action_map);
+	}
+
+	// Never ever reach here, because there is NOTHING to return to. No OS, only BIOS.
+	return 0;
 }

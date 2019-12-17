@@ -84,7 +84,7 @@ typedef struct
 #define MEM_BG_PALETTE          ((uint16*)(0x05000000))
 #define MEM_PALETTE             ((uint16*)(0x05000200))
 
-#define MEM_OAM                 ((volatile ObjectAttributes *)0x07000000)
+#define MEM_OAM                 ((ObjectAttributes *)0x07000000)
 
 #define REG_VCOUNT_ADDR 0x04000006
 
@@ -93,6 +93,7 @@ typedef struct
 
 //FUNCTIONS
 
+// This is the bad way to do vsync. It works, but wastes battery life.
 inline void vsync()
 {
     while (REG_VCOUNT >= 160);

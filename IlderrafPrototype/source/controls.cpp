@@ -82,20 +82,6 @@ void Controls::UpdateActions()
 
     // Get a copy of the input register
     inp.key_poll();
-/*
-    for (int i = 0; i < 9; i++)
-    {
-        if(inp.getKeyState(m_BUTTON_MAP[i]))
-        {
-            m_ACTION_MAP[i] = 1;
-        }
-    }
-
-    if(inp.getKeyState(KEY_START))
-    {
-        m_ACTION_MAP[9] = 1;
-    }
-*/
 
     // Check if START was pressed
     if (inp.wasKeyPressed(KEY_START)) 
