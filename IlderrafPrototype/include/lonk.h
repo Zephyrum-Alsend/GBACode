@@ -19,20 +19,21 @@
 // https://knowyourmeme.com/memes/lonk
 class Lonk {
     public:
-        Lonk(bool PC = false);
+        Lonk(uint32* clck, bool PC = false);
 
         void InitializeSprite(CharSprite* sprite, ObjectAttributes* attribs);
 
+        void ExecuteAction(uint8 AM[10]);
+        
         void UpdateSpritePosition(CharSprite* sprite);
 
         void TickSpriteAnimation(CharSprite* sprite);
-
-        void ExecuteAction(uint8 AM[10]);
     private:
-        bool ISPC;
+        bool ISPC; // is controlled by player or AI?
 
         ObjectAttributes OAM_BACKBUFFER[128];
         CharSprite SPRITE;
+        uint32* CLOCK;
 
         int HP; // Hit Points - if at 0, char dies
         int MAXHP = 100; // Max Hit Points - HP cannot exceed MAXHP

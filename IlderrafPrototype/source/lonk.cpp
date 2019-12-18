@@ -1,8 +1,42 @@
 #include "lonk.h"
 
-Lonk::Lonk(bool PC)
+/**/
+/*
+Lonk::Lonk()
+
+NAME
+
+Lonk::Lonk - class constructor.
+
+SYNOPSIS
+
+Lonk::Lonk(uint32* clck, bool PC = false);
+clck                 --> the global clock, measuring time in frames.
+PC                  --> controlled by the player or by AI
+
+DESCRIPTION
+
+This function initializes the character Lonk, loading it's
+animations into VRAM, initializing it's own sprite and values.
+
+RETURNS
+
+Returns nothing.
+
+AUTHOR
+
+Lucas Crockett
+
+DATE
+
+16/12/2019
+
+*/
+/**/
+Lonk::Lonk(uint32* clck, bool PC)
 {
     ISPC = PC;
+    CLOCK = clck;
 
     // Put our sprite data into VRAM
     memcpy(&MEM_TILE[4][0], HeroTiles, HeroTilesLen);
@@ -19,6 +53,35 @@ Lonk::Lonk(bool PC)
     SP = MAXSP;
 }
 
+/**/
+/*
+Lonk::InitializeSprite()
+
+NAME
+
+Lonk::InitializeSprite - initializes sprite data.
+
+SYNOPSIS
+
+Lonk::InitializeSprite(CharSprite* sprite, ObjectAttributes* attribs);
+sprite               --> struct containing high level sprite data.
+attribs              --> struct containing low level sprite data.
+
+DESCRIPTION
+
+This function assigns attribs to sprite and initializes
+sprite's values.
+
+RETURNS
+
+Returns nothing.
+
+AUTHOR
+
+Kyle Halladay
+
+*/
+/**/
 void Lonk::InitializeSprite(CharSprite* sprite, ObjectAttributes* attribs)
 {
     sprite->spriteAttribs = attribs;
@@ -31,6 +94,39 @@ void Lonk::InitializeSprite(CharSprite* sprite, ObjectAttributes* attribs)
     sprite->velY = 0;
 }
 
+/**/
+/*
+Lonk::ExecuteAction()
+
+NAME
+
+Lonk::ExecuteAction - main routine for Lonk.
+
+SYNOPSIS
+
+Lonk::ExecuteAction(uint8 AM[10]);
+AM[10]               --> array containing player input flags.
+
+DESCRIPTION
+
+This function reads the player's input and executes on them
+(if ISPC) or runs an AI package, the updates internal stats
+and updates Lonk's sprite position and animation.
+
+RETURNS
+
+Returns nothing.
+
+AUTHOR
+
+Lucas Crockett
+
+DATE
+
+18/12/2019
+
+*/
+/**/
 void Lonk::ExecuteAction(uint8 AM[10])
 {
     if (ISPC)
@@ -82,6 +178,10 @@ void Lonk::ExecuteAction(uint8 AM[10])
 
         // Check which actions are to be performed
         
+        // Reset values that could be modified
+        SPREC = 1;
+        HPREC = 0;
+
         // Toggle ability
         if(AM[0] == 1)
         {
@@ -109,10 +209,13 @@ void Lonk::ExecuteAction(uint8 AM[10])
             if (ISMOV)
             {
                 ISDSH = true;
+                SPREC -= 5;
             }
             else
             {
                 // Heal code here
+                SPREC -= 2;
+                HPREC += 2;
             }
         }
         else if(AM[2] == 2)
@@ -149,13 +252,56 @@ void Lonk::ExecuteAction(uint8 AM[10])
     {
         // Run AI package
     }
-    
+
+    SP += SPREC;
+    max(SP, MAXSP);
+    if(SP < 0)
+    {
+        HP += SP;
+        SP = 0;
+    }
+    HP += HPREC;
+    max(MAXHP, HP);
+    if(HP <= 0)
+    {
+        // Run death code
+    }
+
     UpdateSpritePosition(&SPRITE);
     TickSpriteAnimation(&SPRITE);
 
     MEM_OAM[0] = OAM_BACKBUFFER[0];
 }
 
+
+/**/
+/*
+Lonk::UpdateSpritePosition()
+
+NAME
+
+Lonk::UpdateSpritePosition - updates a sprite's position.
+
+SYNOPSIS
+
+Lonk::UpdateSpritePosition(CharSprite* sprite);
+sprite               --> the sprite to be updated.
+
+DESCRIPTION
+
+This function updates the low level sprite data with the high
+level data.
+
+RETURNS
+
+Returns nothing.
+
+AUTHOR
+
+Kyle Halladay
+
+*/
+/**/
 void Lonk::UpdateSpritePosition(CharSprite* sprite)
 {
     sprite->posX += sprite->velX;
@@ -170,6 +316,34 @@ void Lonk::UpdateSpritePosition(CharSprite* sprite)
     sprite->spriteAttribs->attr1 = (sprite->facingRight? 0x4000 : 0x5000) + sprite->posX;
 }
 
+/**/
+/*
+Lonk::TickSpriteAnimation()
+
+NAME
+
+Lonk::TickSpriteAnimation - updates a sprite's animation.
+
+SYNOPSIS
+
+Lonk::TickSpriteAnimation(CharSprite* sprite);
+sprite               --> the sprite to be updated.
+
+DESCRIPTION
+
+This function updates the sprite's animation frame based on it's
+high level data.
+
+RETURNS
+
+Returns nothing.
+
+AUTHOR
+
+Kyle Halladay, Lucas Crockett
+
+*/
+/**/
 void Lonk::TickSpriteAnimation(CharSprite* sprite)
 {
     ObjectAttributes* spriteAttribs = sprite->spriteAttribs;
@@ -183,7 +357,11 @@ void Lonk::TickSpriteAnimation(CharSprite* sprite)
     else
     {
         sprite->firstAnimCycleFrame = 0;
-        sprite->animFrame = (++sprite->animFrame) % 4;
+        // Slows down the animation
+        if (!(*CLOCK % 10))
+        {
+            sprite->animFrame = (++sprite->animFrame) % 4;
+        }
     }
 
     spriteAttribs->attr2 = sprite->firstAnimCycleFrame + (sprite->animFrame * 8);    
