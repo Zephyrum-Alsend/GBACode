@@ -11,7 +11,7 @@ Controls::GetActions - gets the flag states for actions.
 SYNOPSIS
 
 Controls::GetActions(uint8 arr[10]);
-arr[10]             --> the array to copy m_ACTION_MAP into.
+arr[10]             --> the array to copy ACTION_MAP into.
 
 DESCRIPTION
 
@@ -36,7 +36,7 @@ void Controls::GetActions(uint8 arr[10])
 {
     for(int i = 0; i < 10; i++)
     {
-        arr[i] = m_ACTION_MAP[i];
+        arr[i] = ACTION_MAP[i];
     }
 }
 
@@ -74,45 +74,45 @@ DATE
 /**/
 void Controls::UpdateActions()
 {
-    // Reset m_ACTION_MAP
+    // Reset ACTION_MAP
     for (int i = 0; i < 10; i++)
     {
-        m_ACTION_MAP[i] = 0;
+        ACTION_MAP[i] = 0;
     }
 
     // Get a copy of the input register
-    inp.key_poll();
+    INP.key_poll();
 
     // Check if START was pressed
-    if (inp.wasKeyPressed(KEY_START)) 
+    if (INP.wasKeyPressed(KEY_START)) 
     {
-        m_ACTION_MAP[9] = 1;
+        ACTION_MAP[9] = 1;
     }
 
     // Check if buttons assigned to ACTIONS were used
     for (int i = 0; i < 5; i++)
     {
-        // Set the current button to check for.
-        uint16 button = m_BUTTON_MAP[i];
+        // Set the current button to check for
+        uint16 button = BUTTON_MAP[i];
 
-        if (inp.wasKeyPressed(button))
+        if (INP.wasKeyPressed(button))
         {
-            m_ACTION_MAP[i] = 1;
+            ACTION_MAP[i] = 1;
         }
-        else if (inp.wasKeyReleased(button))
+        else if (INP.wasKeyReleased(button))
         {
-            m_ACTION_MAP[i] = 2;
+            ACTION_MAP[i] = 2;
         }
     }
 
     // Check if buttons assigned to MOVE are held
     for (int i = 5; i < 9; i++)
     {
-        uint16 button = m_BUTTON_MAP[i];
+        uint16 button = BUTTON_MAP[i];
 
-        if (inp.getKeyState(button))
+        if (INP.getKeyState(button))
         {
-            m_ACTION_MAP[i] = 1;
+            ACTION_MAP[i] = 1;
         }
     }
 
@@ -161,12 +161,12 @@ bool Controls::ChangeControls(int ButtonNum)
     uint16 swapkey;
     for (int i = 0; i < 9; i++)
     {
-        // Check if a button is pressed/held.
-        if (m_ACTION_MAP[i] == 1)
+        // Check if a button is pressed/held.  Ignores releases.
+        if (ACTION_MAP[i] == 1)
         {
-            swapkey = m_BUTTON_MAP[i];
-            m_BUTTON_MAP[i] = m_BUTTON_MAP[ButtonNum];
-            m_BUTTON_MAP[ButtonNum] = swapkey;
+            swapkey = BUTTON_MAP[i];
+            BUTTON_MAP[i] = BUTTON_MAP[ButtonNum];
+            BUTTON_MAP[ButtonNum] = swapkey;
             return true;
         }
     }

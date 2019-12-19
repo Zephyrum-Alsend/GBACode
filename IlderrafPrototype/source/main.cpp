@@ -17,6 +17,10 @@ int main()
 	REG_DISPLAYCONTROL =  VIDEOMODE_0 | BACKGROUND_0 | ENABLE_OBJECTS | MAPPINGMODE_1D;
 	uint8 action_map[10];
 
+    // Hold down the button you want to swap as you're launching the .gba
+    //inpu.GetActions(action_map);
+    //inpu.ChangeControls(1); // Swaps held key with KEY_B
+
 	Lonk hero(&clock, true);
 
 	while(1)

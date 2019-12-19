@@ -29,16 +29,17 @@ public:
     bool ChangeControls(int ButtonNum);
 
 private:
-    input inp;
+    // Input class, to read the registers for us.
+    input INP;
 
     // Array of remappable buttons.  These correspond directly to the ACTION_MAP.
     // START is not remappable, as it is used to access options menus.
-    uint16 m_BUTTON_MAP [9] = {KEY_A, KEY_B, KEY_L, KEY_R, KEY_SELECT, 
+    uint16 BUTTON_MAP [9] = {KEY_A, KEY_B, KEY_L, KEY_R, KEY_SELECT, 
                                 KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT};
 
     // Contains flags for character actions.
     // Index 0 - 4 are ACTIONS, can be press (1), release (2) or neither (0).
     // Index 5 - 8 are MOVE, are either held (1) or not (0).
     // Index 9 is START, either press (1) or not (0).
-    uint8 m_ACTION_MAP [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    uint8 ACTION_MAP [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 };

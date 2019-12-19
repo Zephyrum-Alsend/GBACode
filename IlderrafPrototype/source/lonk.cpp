@@ -200,15 +200,16 @@ void Lonk::ExecuteAction(uint8 AM[10])
         else if(AM[1] == 2)
         {
             // Action 4
+            ISATK = ATKDUR;
         }
         
         // Heal/Dash
         if(AM[2] == 1)
         {
             // Action 5
+            ISDSH = true;
             if (ISMOV)
             {
-                ISDSH = true;
                 SPREC -= 5;
             }
             else
@@ -348,19 +349,30 @@ void Lonk::TickSpriteAnimation(CharSprite* sprite)
 {
     ObjectAttributes* spriteAttribs = sprite->spriteAttribs;
 
-    if (sprite->velX != 0)
+    // Attack animation
+    if(ISATK)
     {
-        sprite->firstAnimCycleFrame = 32;
-        sprite->animFrame = (++sprite->animFrame) % 3;
-
+        sprite->firstAnimCycleFrame = 56;
+	    sprite->animFrame = ISATK > ATKREC ? 0 : 1;
+        ISATK--;
     }
     else
     {
-        sprite->firstAnimCycleFrame = 0;
-        // Slows down the animation
-        if (!(*CLOCK % 10))
+        // Movement animations
+        if (sprite->velX != 0 || sprite->velY != 0)
         {
-            sprite->animFrame = (++sprite->animFrame) % 4;
+            sprite->firstAnimCycleFrame = 32;
+            sprite->animFrame = (++sprite->animFrame) % 3;
+        }
+        // Idle animation
+        else
+        {
+            sprite->firstAnimCycleFrame = 0;
+            // Slows down the animation
+            if (!(*CLOCK % IDLEDELAY))
+            {
+                sprite->animFrame = (++sprite->animFrame) % 4;
+            }
         }
     }
 

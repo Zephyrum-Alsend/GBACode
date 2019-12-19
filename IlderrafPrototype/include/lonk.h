@@ -35,16 +35,24 @@ class Lonk {
         CharSprite SPRITE;
         uint32* CLOCK;
 
+        int LENX = 16; // Width of char's sprite in pixels
+        int LENY = 16; // Height of char's sprite in pixels
+
         int HP; // Hit Points - if at 0, char dies
         int MAXHP = 100; // Max Hit Points - HP cannot exceed MAXHP
         int HPREC = 0; // Recovery rate of HP
         int SP; // Stamina Points - resource for actions, if at 0, actions cost HP
         int MAXSP = 100; // Max Stamina Points - SP cannot exceed MAXSP
         int SPREC = 1; // Recovery rate of SP
-        int LENX = 16; // Width of char's sprite in pixels
-        int LENY = 16; // Height of char's sprite in pixels
+
+        int IDLEDELAY = 10; // Delay in frames until the next frame of the idle animation
+        
         int SPD = 2; // Speed, measured in pixels per frame
         bool ISDSH = false; // Flag to indicate if DSHMULT is in effect
         int DSHMULT = 3; // Multiplier for speed when char is dashing
         bool ISMOV = false; // Flag to indicate if char is moving or not
+
+        int ISATK = 0; // Both flag to indicate if attacking and timer for attack animation
+        int ATKDUR = 22; // Total duration of the attack animation in frames
+        int ATKREC = 10; // At how many frames left should switch to recovery animation
 };
